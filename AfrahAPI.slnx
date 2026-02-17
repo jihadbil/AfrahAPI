@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="AfrahAPI.DataAccess/AfrahAPI.DataAccess.csproj" />
+  <Project Path="AfrahAPI.Models.DTOs/AfrahAPI.Models.DTOs.csproj" />
+  <Project Path="AfrahAPI.Models/AfrahAPI.Models.csproj" />
+  <Project Path="AfrahAPI.Services/AfrahAPI.Services.csproj" Id="da5a0489-2220-487d-829a-7d118e78ad42" />
+  <Project Path="AfrahAPI/AfrahAPI.csproj" />
+</Solution>

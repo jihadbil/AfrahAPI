@@ -1,0 +1,734 @@
+//@AfrahAPI_HostAddress = https://localhost:7026
+@AfrahAPI_Http_HostAddress = http://localhost:5026
+
+###############################################################################
+# AUTHENTICATION - المصادقة وإدارة الحسابات
+###############################################################################
+
+### Get Available Roles - الحصول على الأدوار المتاحة
+GET {{AfrahAPI_Http_HostAddress}}/api/account/roles
+Accept: application/json
+
+### Register New Customer - تسجيل عميل جديد
+POST {{AfrahAPI_Http_HostAddress}}/api/account/register
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "userName": "customer1",
+  "password": "Customer@123",
+  "confirmPassword": "Customer@123",
+  "phoneNumber": "0501234567",
+  "role": "Customer"
+}
+
+### Register New Hall Owner - تسجيل صاحب صالة جديد
+POST {{AfrahAPI_Http_HostAddress}}/api/account/register
+Content-Type: application/json
+
+{
+  "email": "owner@example.com",
+  "userName": "hallowner1",
+  "password": "Owner@123",
+  "confirmPassword": "Owner@123",
+  "phoneNumber": "0509876543",
+  "role": "HallOwner"
+}
+
+### Register Admin - تسجيل مسؤول
+POST {{AfrahAPI_Http_HostAddress}}/api/account/register
+Content-Type: application/json
+
+{
+  "email": "admin@afrahapi.com",
+  "userName": "admin",
+  "password": "Admin@123456",
+  "confirmPassword": "Admin@123456",
+  "phoneNumber": "0501111111",
+  "role": "Admin"
+}
+
+### Login - تسجيل الدخول
+POST {{AfrahAPI_Http_HostAddress}}/api/account/login
+Content-Type: application/json
+
+{
+  "emailOrUserName": "admin@afrahapi.com",
+  "password": "Admin@123456"
+}
+
+### Login with Customer - تسجيل دخول عميل
+POST {{AfrahAPI_Http_HostAddress}}/api/account/login
+Content-Type: application/json
+
+{
+  "emailOrUserName": "customer@example.com",
+  "password": "Customer@123"
+}
+
+### Change Password - تغيير كلمة المرور (يحتاج Token)
+# احصل على Token من Login أولاً وضعه في Authorization header
+POST {{AfrahAPI_Http_HostAddress}}/api/account/change-password
+Content-Type: application/json
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+{
+  "currentPassword": "Admin@123456",
+  "newPassword": "NewAdmin@123456",
+  "confirmNewPassword": "NewAdmin@123456"
+}
+
+###############################################################################
+# 1. HALL CONTROLLER - إدارة الصالات
+###############################################################################
+
+### Get All Halls - الحصول على جميع الصالات
+GET {{AfrahAPI_Http_HostAddress}}/api/hall
+Accept: application/json
+
+### Get Hall By ID - الحصول على صالة محددة
+GET {{AfrahAPI_Http_HostAddress}}/api/hall/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Create New Hall - إنشاء صالة جديدة
+POST {{AfrahAPI_Http_HostAddress}}/api/hall
+Content-Type: application/json
+
+{
+  "hallName": "قاعة الأفراح الذهبية",
+  "description": "قاعة فاخرة لحفلات الزفاف",
+  "address": "الرياض، حي الملك فهد",
+  "latitude": 24.7136,
+  "longitude": 46.6753,
+  "capacity": 500,
+  "pricingMode": "PerDay",
+  "pricePerHour": 0,
+  "pricePerDay": 15000,
+  "defaultDepositAmount": 5000,
+  "isAvailable": true,
+  "allowsMultipleReservationsPerDay": false,
+  "autoAcceptReservations": false,
+  "mainImageUrl": "https://example.com/hall1.jpg",
+  "cancellationPolicy": "الإلغاء قبل أسبوع من الموعد بدون رسوم",
+  "baseCommissionRate": 10,
+  "ownerUserID": "00000000-0000-0000-0000-000000000001",
+  "categoryID": "00000000-0000-0000-0000-000000000001"
+}
+
+### Update Hall - تحديث صالة
+PUT {{AfrahAPI_Http_HostAddress}}/api/hall/00000000-0000-0000-0000-000000000001
+Content-Type: application/json
+
+{
+  "hallName": "قاعة الأفراح الذهبية المحدثة",
+  "description": "قاعة فاخرة لحفلات الزفاف - محدثة",
+  "pricePerDay": 18000
+}
+
+### Delete Hall - حذف صالة
+DELETE {{AfrahAPI_Http_HostAddress}}/api/hall/00000000-0000-0000-0000-000000000001
+
+### Search Halls - البحث عن صالات
+POST {{AfrahAPI_Http_HostAddress}}/api/hall/search
+Content-Type: application/json
+
+{
+  "categoryId": "00000000-0000-0000-0000-000000000001",
+  "minCapacity": 200,
+  "maxPrice": 20000
+}
+
+### Get Available Halls - الحصول على الصالات المتاحة
+GET {{AfrahAPI_Http_HostAddress}}/api/hall/available?startDate=2026-02-01&endDate=2026-02-02
+Accept: application/json
+
+### Check Hall Availability - فحص توفر صالة
+GET {{AfrahAPI_Http_HostAddress}}/api/hall/00000000-0000-0000-0000-000000000001/availability?startDate=2026-02-01&endDate=2026-02-02
+Accept: application/json
+
+### Get Halls By Owner - الحصول على صالات مالك
+GET {{AfrahAPI_Http_HostAddress}}/api/hall/owner/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Get Halls By Category - الحصول على صالات حسب الفئة
+GET {{AfrahAPI_Http_HostAddress}}/api/hall/category/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Verify Hall - التحقق من الصالة
+POST {{AfrahAPI_Http_HostAddress}}/api/hall/00000000-0000-0000-0000-000000000001/verify
+
+### Update Hall Availability - تحديث حالة التوفر
+PUT {{AfrahAPI_Http_HostAddress}}/api/hall/00000000-0000-0000-0000-000000000001/availability
+Content-Type: application/json
+
+true
+
+###############################################################################
+# 2. BOOKING CONTROLLER - إدارة الحجوزات
+###############################################################################
+
+### Get All Bookings - الحصول على جميع الحجوزات
+GET {{AfrahAPI_Http_HostAddress}}/api/booking
+Accept: application/json
+
+### Get Booking By ID - الحصول على حجز محدد
+GET {{AfrahAPI_Http_HostAddress}}/api/booking/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Create New Booking - إنشاء حجز جديد
+POST {{AfrahAPI_Http_HostAddress}}/api/booking
+Content-Type: application/json
+
+{
+  "startDate": "2026-03-15T18:00:00",
+  "endDate": "2026-03-16T02:00:00",
+  "numberOfGuests": 400,
+  "specialRequests": "نحتاج إلى ديكور خاص",
+  "hallId": "00000000-0000-0000-0000-000000000001",
+  "customerId": "00000000-0000-0000-0000-000000000001"
+}
+
+### Create Booking With Validation - إنشاء حجز مع التحقق
+POST {{AfrahAPI_Http_HostAddress}}/api/booking/create-with-validation
+Content-Type: application/json
+
+{
+  "startDate": "2026-03-15T18:00:00",
+  "endDate": "2026-03-16T02:00:00",
+  "numberOfGuests": 400,
+  "hallId": "00000000-0000-0000-0000-000000000001",
+  "customerId": "00000000-0000-0000-0000-000000000001"
+}
+
+### Update Booking - تحديث حجز
+PUT {{AfrahAPI_Http_HostAddress}}/api/booking/00000000-0000-0000-0000-000000000001
+Content-Type: application/json
+
+{
+  "numberOfGuests": 450,
+  "specialRequests": "تحديث: نحتاج موسيقى حية"
+}
+
+### Delete Booking - حذف حجز
+DELETE {{AfrahAPI_Http_HostAddress}}/api/booking/00000000-0000-0000-0000-000000000001
+
+### Get Bookings By Customer - حجوزات العميل
+GET {{AfrahAPI_Http_HostAddress}}/api/booking/customer/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Get Bookings By Hall - حجوزات الصالة
+GET {{AfrahAPI_Http_HostAddress}}/api/booking/hall/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Update Booking Status - تحديث حالة الحجز
+PUT {{AfrahAPI_Http_HostAddress}}/api/booking/00000000-0000-0000-0000-000000000001/status
+Content-Type: application/json
+
+"Confirmed"
+
+### Cancel Booking - إلغاء الحجز
+POST {{AfrahAPI_Http_HostAddress}}/api/booking/00000000-0000-0000-0000-000000000001/cancel
+Content-Type: application/json
+
+"تغيير في الخطط"
+
+### Confirm Booking - تأكيد الحجز
+POST {{AfrahAPI_Http_HostAddress}}/api/booking/00000000-0000-0000-0000-000000000001/confirm
+
+### Complete Booking - إكمال الحجز
+POST {{AfrahAPI_Http_HostAddress}}/api/booking/00000000-0000-0000-0000-000000000001/complete
+
+### Calculate Booking Cost - حساب تكلفة الحجز
+GET {{AfrahAPI_Http_HostAddress}}/api/booking/calculate-cost?hallId=00000000-0000-0000-0000-000000000001&startDate=2026-03-15T18:00:00&endDate=2026-03-16T02:00:00
+Accept: application/json
+
+###############################################################################
+# 3. INVOICE CONTROLLER - إدارة الفواتير
+###############################################################################
+
+### Get All Invoices - الحصول على جميع الفواتير
+GET {{AfrahAPI_Http_HostAddress}}/api/invoice
+Accept: application/json
+
+### Get Invoice By ID - الحصول على فاتورة محددة
+GET {{AfrahAPI_Http_HostAddress}}/api/invoice/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Create New Invoice - إنشاء فاتورة جديدة
+POST {{AfrahAPI_Http_HostAddress}}/api/invoice
+Content-Type: application/json
+
+{
+  "invoiceDate": "2026-03-01T10:00:00",
+  "dueDate": "2026-03-10T10:00:00",
+  "subtotal": 15000,
+  "taxAmount": 2250,
+  "totalAmount": 17250,
+  "bookingId": "00000000-0000-0000-0000-000000000001"
+}
+
+### Generate Invoice For Booking - إنشاء فاتورة للحجز
+POST {{AfrahAPI_Http_HostAddress}}/api/invoice/generate/00000000-0000-0000-0000-000000000001
+
+### Get Invoices By Customer - فواتير العميل
+GET {{AfrahAPI_Http_HostAddress}}/api/invoice/customer/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Get Invoice Total - حساب إجمالي الفاتورة
+GET {{AfrahAPI_Http_HostAddress}}/api/invoice/00000000-0000-0000-0000-000000000001/total
+Accept: application/json
+
+###############################################################################
+# 4. PAYMENT CONTROLLER - إدارة المدفوعات
+###############################################################################
+
+### Get All Payments - الحصول على جميع المدفوعات
+GET {{AfrahAPI_Http_HostAddress}}/api/payment
+Accept: application/json
+
+### Get Payment By ID - الحصول على مدفوعة محددة
+GET {{AfrahAPI_Http_HostAddress}}/api/payment/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Create New Payment - إنشاء مدفوعة جديدة
+POST {{AfrahAPI_Http_HostAddress}}/api/payment
+Content-Type: application/json
+
+{
+  "paymentDate": "2026-03-01T14:00:00",
+  "amount": 5000,
+  "paymentStatus": "Completed",
+  "transactionReference": "TXN123456",
+  "invoiceId": "00000000-0000-0000-0000-000000000001",
+  "methodId": "00000000-0000-0000-0000-000000000001"
+}
+
+### Process Payment - معالجة دفعة
+POST {{AfrahAPI_Http_HostAddress}}/api/payment/process
+Content-Type: application/json
+
+{
+  "amount": 5000,
+  "paymentDate": "2026-03-01T14:00:00",
+  "invoiceId": "00000000-0000-0000-0000-000000000001",
+  "methodId": "00000000-0000-0000-0000-000000000001"
+}
+
+### Get Payments By Invoice - مدفوعات الفاتورة
+GET {{AfrahAPI_Http_HostAddress}}/api/payment/invoice/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Refund Payment - استرداد المبلغ
+POST {{AfrahAPI_Http_HostAddress}}/api/payment/00000000-0000-0000-0000-000000000001/refund
+Content-Type: application/json
+
+2000
+
+###############################################################################
+# 5. CUSTOMER CONTROLLER - إدارة العملاء
+###############################################################################
+
+### Get All Customers - الحصول على جميع العملاء
+GET {{AfrahAPI_Http_HostAddress}}/api/customer
+Accept: application/json
+
+### Get Customer By ID - الحصول على عميل محدد
+GET {{AfrahAPI_Http_HostAddress}}/api/customer/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Create New Customer - إنشاء عميل جديد
+POST {{AfrahAPI_Http_HostAddress}}/api/customer
+Content-Type: application/json
+
+{
+  "firstName": "محمد",
+  "lastName": "أحمد",
+  "phoneNumber": "0501234567",
+  "email": "mohammed@example.com",
+  "address": "الرياض",
+  "dateOfBirth": "1990-01-01",
+  "userID": "00000000-0000-0000-0000-000000000001"
+}
+
+### Get Customer By UserID - الحصول على عميل بواسطة UserId
+GET {{AfrahAPI_Http_HostAddress}}/api/customer/user/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Get Customer Bookings - حجوزات العميل
+GET {{AfrahAPI_Http_HostAddress}}/api/customer/00000000-0000-0000-0000-000000000001/bookings
+Accept: application/json
+
+### Update Customer Profile - تحديث الملف الشخصي
+PUT {{AfrahAPI_Http_HostAddress}}/api/customer/00000000-0000-0000-0000-000000000001/profile
+Content-Type: application/json
+
+{
+  "phoneNumber": "0509876543",
+  "address": "الرياض - حي النرجس الجديد"
+}
+
+###############################################################################
+# 6. HALL OWNER CONTROLLER - إدارة أصحاب الصالات
+###############################################################################
+
+### Get All Hall Owners - الحصول على جميع أصحاب الصالات
+GET {{AfrahAPI_Http_HostAddress}}/api/hallowner
+Accept: application/json
+
+### Get Hall Owner By ID - الحصول على صاحب صالة محدد
+GET {{AfrahAPI_Http_HostAddress}}/api/hallowner/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Create New Hall Owner - إنشاء صاحب صالة جديد
+POST {{AfrahAPI_Http_HostAddress}}/api/hallowner
+Content-Type: application/json
+
+{
+  "firstName": "خالد",
+  "lastName": "العتيبي",
+  "phoneNumber": "0505555555",
+  "email": "khalid@example.com",
+  "businessName": "مؤسسة قاعات الفخامة",
+  "businessLicenseNumber": "123456789",
+  "taxRegistrationNumber": "987654321",
+  "userID": "00000000-0000-0000-0000-000000000002"
+}
+
+### Get Hall Owner By UserID - الحصول على صاحب صالة بواسطة UserId
+GET {{AfrahAPI_Http_HostAddress}}/api/hallowner/user/00000000-0000-0000-0000-000000000002
+Accept: application/json
+
+### Get Owner Halls - الحصول على صالات المالك
+GET {{AfrahAPI_Http_HostAddress}}/api/hallowner/00000000-0000-0000-0000-000000000001/halls
+Accept: application/json
+
+### Update Owner Profile - تحديث ملف المالك
+PUT {{AfrahAPI_Http_HostAddress}}/api/hallowner/00000000-0000-0000-0000-000000000001/profile
+Content-Type: application/json
+
+{
+  "phoneNumber": "0506666666",
+  "businessName": "مؤسسة قاعات الفخامة المحدثة"
+}
+
+### Get Owner Statistics - إحصائيات المالك
+GET {{AfrahAPI_Http_HostAddress}}/api/hallowner/00000000-0000-0000-0000-000000000001/statistics
+Accept: application/json
+
+###############################################################################
+# 7. EMPLOYEE CONTROLLER - إدارة الموظفين
+###############################################################################
+
+### Get All Employees - الحصول على جميع الموظفين
+GET {{AfrahAPI_Http_HostAddress}}/api/employee
+Accept: application/json
+
+### Get Employee By ID - الحصول على موظف محدد
+GET {{AfrahAPI_Http_HostAddress}}/api/employee/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Create New Employee - إنشاء موظف جديد
+POST {{AfrahAPI_Http_HostAddress}}/api/employee
+Content-Type: application/json
+
+{
+  "firstName": "عبدالله",
+  "lastName": "السعيد",
+  "position": "مدير الحجوزات",
+  "phoneNumber": "0507777777",
+  "email": "abdullah@example.com",
+  "hireDate": "2024-01-01",
+  "salary": 5000,
+  "hallID": "00000000-0000-0000-0000-000000000001"
+}
+
+### Get Employees By Hall - موظفي الصالة
+GET {{AfrahAPI_Http_HostAddress}}/api/employee/hall/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+###############################################################################
+# 8. HALL CATEGORIE CONTROLLER - فئات الصالات
+###############################################################################
+
+### Get All Categories - الحصول على جميع الفئات
+GET {{AfrahAPI_Http_HostAddress}}/api/hallcategorie
+Accept: application/json
+
+### Get Category By ID - الحصول على فئة محددة
+GET {{AfrahAPI_Http_HostAddress}}/api/hallcategorie/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Create New Category - إنشاء فئة جديدة
+POST {{AfrahAPI_Http_HostAddress}}/api/hallcategorie
+Content-Type: application/json
+
+{
+  "categoryName": "قاعات VIP",
+  "description": "قاعات فاخرة للمناسبات الخاصة"
+}
+
+### Get Category With Halls - الفئة مع صالاتها
+GET {{AfrahAPI_Http_HostAddress}}/api/hallcategorie/00000000-0000-0000-0000-000000000001/with-halls
+Accept: application/json
+
+###############################################################################
+# 9. HALL MEDIA CONTROLLER - وسائط الصالات
+###############################################################################
+
+### Get All Media - الحصول على جميع الوسائط
+GET {{AfrahAPI_Http_HostAddress}}/api/hallmedia
+Accept: application/json
+
+### Get Media By ID - الحصول على وسائط محددة
+GET {{AfrahAPI_Http_HostAddress}}/api/hallmedia/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Create New Media - إنشاء وسائط جديدة
+POST {{AfrahAPI_Http_HostAddress}}/api/hallmedia
+Content-Type: application/json
+
+{
+  "mediaUrl": "https://example.com/hall-image.jpg",
+  "mediaType": "Image",
+  "displayOrder": 1,
+  "hallID": "00000000-0000-0000-0000-000000000001"
+}
+
+### Get Media By Hall - وسائط الصالة
+GET {{AfrahAPI_Http_HostAddress}}/api/hallmedia/hall/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Upload Media - رفع وسائط
+POST {{AfrahAPI_Http_HostAddress}}/api/hallmedia/hall/00000000-0000-0000-0000-000000000001/upload
+Content-Type: application/json
+
+{
+  "mediaUrl": "https://example.com/new-photo.jpg",
+  "mediaType": "Image",
+  "displayOrder": 2
+}
+
+###############################################################################
+# 10. HALL SERVICES CONTROLLER - خدمات الصالات
+###############################################################################
+
+### Get All Services - الحصول على جميع الخدمات
+GET {{AfrahAPI_Http_HostAddress}}/api/hallservices
+Accept: application/json
+
+### Get Service By ID - الحصول على خدمة محددة
+GET {{AfrahAPI_Http_HostAddress}}/api/hallservices/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Create New Service - إنشاء خدمة جديدة
+POST {{AfrahAPI_Http_HostAddress}}/api/hallservices
+Content-Type: application/json
+
+{
+  "serviceName": "تصوير فوتوغرافي",
+  "description": "تصوير احترافي للمناسبة",
+  "price": 2000,
+  "hallID": "00000000-0000-0000-0000-000000000001"
+}
+
+### Get Services By Hall - خدمات الصالة
+GET {{AfrahAPI_Http_HostAddress}}/api/hallservices/hall/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Add Service To Hall - إضافة خدمة للصالة
+POST {{AfrahAPI_Http_HostAddress}}/api/hallservices/hall/00000000-0000-0000-0000-000000000001/add
+Content-Type: application/json
+
+{
+  "serviceName": "ديكور",
+  "description": "تنسيق وديكور القاعة",
+  "price": 3000
+}
+
+###############################################################################
+# 11. HALL PAYMENT METHOD CONTROLLER - طرق الدفع للصالات
+###############################################################################
+
+### Get All Hall Payment Methods - الحصول على جميع طرق الدفع
+GET {{AfrahAPI_Http_HostAddress}}/api/hallpaymentmethod
+Accept: application/json
+
+### Get Hall Payment Methods - طرق دفع الصالة
+GET {{AfrahAPI_Http_HostAddress}}/api/hallpaymentmethod/hall/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Add Payment Method To Hall - إضافة طريقة دفع للصالة
+POST {{AfrahAPI_Http_HostAddress}}/api/hallpaymentmethod/hall/00000000-0000-0000-0000-000000000001/add/00000000-0000-0000-0000-000000000001
+
+### Remove Payment Method From Hall - إزالة طريقة دفع من الصالة
+DELETE {{AfrahAPI_Http_HostAddress}}/api/hallpaymentmethod/hall/00000000-0000-0000-0000-000000000001/remove/00000000-0000-0000-0000-000000000001
+
+###############################################################################
+# 12. HALL UNAVAILABLE DATE CONTROLLER - التواريخ غير المتاحة
+###############################################################################
+
+### Get All Unavailable Dates - الحصول على جميع التواريخ المحجوبة
+GET {{AfrahAPI_Http_HostAddress}}/api/hallunavailabledate
+Accept: application/json
+
+### Get Unavailable Dates By Hall - تواريخ الصالة المحجوبة
+GET {{AfrahAPI_Http_HostAddress}}/api/hallunavailabledate/hall/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Add Unavailable Date - إضافة تاريخ محجوب
+POST {{AfrahAPI_Http_HostAddress}}/api/hallunavailabledate/hall/00000000-0000-0000-0000-000000000001/add
+Content-Type: application/json
+
+{
+  "startDate": "2026-04-01T00:00:00",
+  "endDate": "2026-04-03T00:00:00",
+  "reason": "صيانة القاعة"
+}
+
+###############################################################################
+# 13. HALL RATING CONTROLLER - تقييمات الصالات
+###############################################################################
+
+### Get All Hall Ratings - الحصول على جميع التقييمات
+GET {{AfrahAPI_Http_HostAddress}}/api/hallrating
+Accept: application/json
+
+### Get Hall Ratings - تقييمات الصالة
+GET {{AfrahAPI_Http_HostAddress}}/api/hallrating/hall/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Add Hall Rating - إضافة تقييم للصالة
+POST {{AfrahAPI_Http_HostAddress}}/api/hallrating/add
+Content-Type: application/json
+
+{
+  "rating": 5,
+  "comment": "قاعة رائعة والخدمة ممتازة",
+  "hallID": "00000000-0000-0000-0000-000000000001",
+  "customerID": "00000000-0000-0000-0000-000000000001"
+}
+
+### Get Average Hall Rating - متوسط تقييم الصالة
+GET {{AfrahAPI_Http_HostAddress}}/api/hallrating/hall/00000000-0000-0000-0000-000000000001/average
+Accept: application/json
+
+###############################################################################
+# 14. SERVICE RATING CONTROLLER - تقييمات الخدمات
+###############################################################################
+
+### Get All Service Ratings - الحصول على جميع تقييمات الخدمات
+GET {{AfrahAPI_Http_HostAddress}}/api/servicerating
+Accept: application/json
+
+### Get Service Ratings - تقييمات الخدمة
+GET {{AfrahAPI_Http_HostAddress}}/api/servicerating/service/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Add Service Rating - إضافة تقييم للخدمة
+POST {{AfrahAPI_Http_HostAddress}}/api/servicerating/add
+Content-Type: application/json
+
+{
+  "rating": 4,
+  "comment": "خدمة التصوير كانت احترافية",
+  "hallServiceID": "00000000-0000-0000-0000-000000000001",
+  "customerID": "00000000-0000-0000-0000-000000000001"
+}
+
+### Get Average Service Rating - متوسط تقييم الخدمة
+GET {{AfrahAPI_Http_HostAddress}}/api/servicerating/service/00000000-0000-0000-0000-000000000001/average
+Accept: application/json
+
+###############################################################################
+# 15. PAYMENT METHOD CONTROLLER - طرق الدفع العامة
+###############################################################################
+
+### Get All Payment Methods - الحصول على جميع طرق الدفع
+GET {{AfrahAPI_Http_HostAddress}}/api/paymentmethod
+Accept: application/json
+
+### Get Payment Method By ID - الحصول على طريقة دفع محددة
+GET {{AfrahAPI_Http_HostAddress}}/api/paymentmethod/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Create New Payment Method - إنشاء طريقة دفع جديدة
+POST {{AfrahAPI_Http_HostAddress}}/api/paymentmethod
+Content-Type: application/json
+
+{
+  "methodName": "بطاقة ائتمان",
+  "description": "الدفع عن طريق بطاقة الائتمان",
+  "isActive": true
+}
+
+### Get Active Payment Methods - طرق الدفع النشطة
+GET {{AfrahAPI_Http_HostAddress}}/api/paymentmethod/active
+Accept: application/json
+
+###############################################################################
+# 16. INVOICE ITEMS CONTROLLER - بنود الفاتورة
+###############################################################################
+
+### Get All Invoice Items - الحصول على جميع البنود
+GET {{AfrahAPI_Http_HostAddress}}/api/invoiceitems
+Accept: application/json
+
+### Get Invoice Items - بنود الفاتورة
+GET {{AfrahAPI_Http_HostAddress}}/api/invoiceitems/invoice/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Add Item To Invoice - إضافة بند للفاتورة
+POST {{AfrahAPI_Http_HostAddress}}/api/invoiceitems/invoice/00000000-0000-0000-0000-000000000001/add
+Content-Type: application/json
+
+{
+  "description": "رسوم إيجار القاعة",
+  "quantity": 1,
+  "unitPrice": 15000,
+  "taxRate": 15,
+  "hallServiceId": null
+}
+
+### Get Item Total - إجمالي البند
+GET {{AfrahAPI_Http_HostAddress}}/api/invoiceitems/00000000-0000-0000-0000-000000000001/total
+Accept: application/json
+
+### Get Invoice Items Total - إجمالي بنود الفاتورة
+GET {{AfrahAPI_Http_HostAddress}}/api/invoiceitems/invoice/00000000-0000-0000-0000-000000000001/total
+Accept: application/json
+
+###############################################################################
+# 17. NOTIFICATION CONTROLLER - إدارة الإشعارات
+###############################################################################
+
+### Get All Notifications - الحصول على جميع الإشعارات
+GET {{AfrahAPI_Http_HostAddress}}/api/notification
+Accept: application/json
+
+### Get User Notifications - إشعارات المستخدم
+GET {{AfrahAPI_Http_HostAddress}}/api/notification/user/00000000-0000-0000-0000-000000000001
+Accept: application/json
+
+### Create New Notification - إنشاء إشعار جديد
+POST {{AfrahAPI_Http_HostAddress}}/api/notification
+Content-Type: application/json
+
+{
+  "title": "تأكيد الحجز",
+  "message": "تم تأكيد حجزك بنجاح",
+  "notificationType": "BookingConfirmation",
+  "relatedEntityID": "00000000-0000-0000-0000-000000000001",
+  "userID": "00000000-0000-0000-0000-000000000001"
+}
+
+### Mark Notification As Read - وضع علامة مقروء
+POST {{AfrahAPI_Http_HostAddress}}/api/notification/00000000-0000-0000-0000-000000000001/mark-read
+
+### Send Booking Confirmation - إرسال تأكيد الحجز
+POST {{AfrahAPI_Http_HostAddress}}/api/notification/booking-confirmation/00000000-0000-0000-0000-000000000001
+
+### Send Payment Confirmation - إرسال تأكيد الدفع
+POST {{AfrahAPI_Http_HostAddress}}/api/notification/payment-confirmation/00000000-0000-0000-0000-000000000001
+
+### Send Booking Reminder - إرسال تذكير الحجز
+POST {{AfrahAPI_Http_HostAddress}}/api/notification/booking-reminder/00000000-0000-0000-0000-000000000001
