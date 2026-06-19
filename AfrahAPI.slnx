@@ -4,4 +4,5 @@
   <Project Path="AfrahAPI.Models/AfrahAPI.Models.csproj" />
   <Project Path="AfrahAPI.Services/AfrahAPI.Services.csproj" Id="da5a0489-2220-487d-829a-7d118e78ad42" />
   <Project Path="AfrahAPI/AfrahAPI.csproj" />
+  <Project Path="AfrahApp/AfrahApp.csproj" Id="96342d70-167a-46ab-b44a-2c895ce8efc9" />
 </Solution>

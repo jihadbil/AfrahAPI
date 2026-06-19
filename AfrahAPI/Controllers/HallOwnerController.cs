@@ -1,4 +1,5 @@
 using AfrahAPI.Models.DTOs.HallOwner;
+using AfrahAPI.Models.DTOs.Auth;
 using AfrahAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,13 +13,57 @@ namespace AfrahAPI.Controllers;
 public class HallOwnerController : ControllerBase
 {
     private readonly IHallOwnerService _hallOwnerService;
+    private readonly IAuthService _authService;
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public HallOwnerController(IHallOwnerService hallOwnerService)
+    public HallOwnerController(IHallOwnerService hallOwnerService, IAuthService authService)
     {
         _hallOwnerService = hallOwnerService;
+        _authService = authService;
+    }
+
+    /// <summary>
+    /// تسجيل صاحب صالة جديد (إنشاء مستخدم + صاحب صالة)
+    /// </summary>
+    /// <param name="registerDto">بيانات التسجيل الكاملة</param>
+    /// <returns>نتيجة عملية التسجيل</returns>
+    [HttpPost("register")]
+    public async Task<ActionResult<RegisterResponseDTO>> Register([FromBody] HallOwnerCreateDTO registerDto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+
+
+        // 2. إنشاء صاحب الصالة وربطه بالمستخدم
+        var hallOwnerCreateDto = new HallOwnerCreateDTO
+        {
+            FirstName = registerDto.FirstName,
+            LastName = registerDto.LastName,
+            PhoneNumber = registerDto.PhoneNumber,
+            Email = registerDto.Email,
+            Gender = registerDto.Gender,
+            BirthDate = registerDto.BirthDate,
+            Address = registerDto.Address,
+            Nationality = registerDto.Nationality,
+            City = registerDto.City,
+            Country = registerDto.Country,
+            UserID = registerDto.UserID
+        };
+
+        try
+        {
+            var hallOwner = await _hallOwnerService.CreateAsync(hallOwnerCreateDto);
+            return Ok(hallOwner);
+        }
+        catch (Exception)
+        {
+            // في حالة فشل إنشاء صاحب الصالة، يجب حذف المستخدم (rollback)
+            // TODO: إضافة آلية rollback
+            return StatusCode(500, new { message = "فشل إنشاء صاحب الصالة بعد إنشاء المستخدم" });
+        }
     }
 
     /// <summary>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="AfrahApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="AfrahApp"
+    FlyoutBehavior="Disabled">
+
+    <ShellContent
+        x:Name="LoginShellContent"
+        Title="Login"
+        Route="LoginPage" />
+
+    <ShellContent
+        x:Name="RegisterShellContent"
+        Title="Register"
+        Route="RegisterPage"
+        IsVisible="False" />
+
+    <ShellContent
+        x:Name="MainShellContent"
+        Title="Main"
+        Route="MainPage"
+        IsVisible="False" />
+
+    <ShellContent
+        x:Name="HallDetailsShellContent"
+        Title="Hall Details"
+        Route="HallDetailsPage"
+        IsVisible="False" />
+
+</Shell>

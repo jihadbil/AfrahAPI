@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:AfrahApp.ViewModels"
+             x:Class="AfrahApp.Pages.RegisterPage"
+             x:DataType="viewModels:RegisterViewModel"
+             FlowDirection="RightToLeft"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#F8F6F6"
+             Title="تسجيل حساب">
+
+    <ScrollView>
+        <Grid RowDefinitions="300,Auto">
+            <Grid Grid.Row="0">
+                <Image Source="https://lh3.googleusercontent.com/aida-public/AB6AXuBKFKXPXwoObJORjwm_ILf3uzx1YNp-W-HuRbatccYSIVREyjF2ISe3-HyF9wt_u-a7WA52ERMS0p9L-5gbqDmx30RTrRlQhNrLl3wiaqnKBtQSp_PqO-_FTPyGo_X9uVFInk-5kgjVvh0YOWozMzo30ocUtdvvCjVMV9jDAAqlCT55YM9STZIyr9mMc66KiGMuX1kIfefrUJA25FUO4pFnC-nHwQXlknWxFhn0KXDJCX01tB-bDOYPcJ4h194ElFSy1ElzDYBZsBM"
+                       Aspect="AspectFill" />
+
+                <BoxView Color="#30000000" />
+
+                <Button Text="→"
+                        Command="{Binding BackToLoginCommand}"
+                        FontSize="30"
+                        TextColor="#181113"
+                        BackgroundColor="#F8F6F6"
+                        BorderWidth="0"
+                        HeightRequest="60"
+                        WidthRequest="60"
+                        CornerRadius="30"
+                        HorizontalOptions="End"
+                        VerticalOptions="Start"
+                        Margin="0,30,22,0" />
+            </Grid>
+
+            <Border Grid.Row="1"
+                    Margin="0,-24,0,0"
+                    StrokeThickness="0"
+                    BackgroundColor="#F8F6F6"
+                    StrokeShape="RoundRectangle 38,38,0,0"
+                    Padding="24,24,24,26">
+                <VerticalStackLayout Spacing="14">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="أهلاً بك معنا"
+                               FontSize="56"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               TextColor="#101328" />
+                        <Label Text="سجل الآن واحجز قاعة أحلامك بكل سهولة"
+                               FontSize="18"
+                               HorizontalTextAlignment="Center"
+                               TextColor="#617189" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="الاسم الكامل"
+                               FontSize="14"
+                               TextColor="#181113"
+                               HorizontalTextAlignment="End" />
+                        <Border Stroke="#D4DEE9"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 14"
+                                BackgroundColor="#F8F9FB"
+                                Padding="12,8">
+                            <Grid ColumnDefinitions="*,Auto"
+                                  ColumnSpacing="8"
+                                  FlowDirection="LeftToRight">
+                                <Entry Grid.Column="0"
+                                       Placeholder="ادخل اسمك الكامل"
+                                       Text="{Binding FullName, Mode=TwoWay}"
+                                       FontSize="16"
+                                       BackgroundColor="Transparent"
+                                       HorizontalTextAlignment="End"
+                                       TextColor="#181113"
+                                       PlaceholderColor="#8FA0B8" />
+                                <Label Grid.Column="1"
+                                       Text="👤"
+                                       FontSize="20"
+                                       VerticalTextAlignment="Center"
+                                       TextColor="#E56895" />
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="البريد الإلكتروني"
+                               FontSize="14"
+                               TextColor="#181113"
+                               HorizontalTextAlignment="End" />
+                        <Border Stroke="#D4DEE9"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 14"
+                                BackgroundColor="#F8F9FB"
+                                Padding="12,8">
+                            <Grid ColumnDefinitions="*,Auto"
+                                  ColumnSpacing="8"
+                                  FlowDirection="LeftToRight">
+                                <Entry Grid.Column="0"
+                                       Placeholder="example@email.com"
+                                       Keyboard="Email"
+                                       Text="{Binding Email, Mode=TwoWay}"
+                                       FontSize="16"
+                                       BackgroundColor="Transparent"
+                                       HorizontalTextAlignment="End"
+                                       TextColor="#181113"
+                                       PlaceholderColor="#8FA0B8" />
+                                <Label Grid.Column="1"
+                                       Text="✉"
+                                       FontSize="20"
+                                       VerticalTextAlignment="Center"
+                                       TextColor="#E56895" />
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="رقم الهاتف"
+                               FontSize="14"
+                               TextColor="#181113"
+                               HorizontalTextAlignment="End" />
+                        <Border Stroke="#D4DEE9"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 14"
+                                BackgroundColor="#F8F9FB"
+                                Padding="12,8">
+                            <Grid ColumnDefinitions="*,Auto"
+                                  ColumnSpacing="8"
+                                  FlowDirection="LeftToRight">
+                                <Entry Grid.Column="0"
+                                       Placeholder="+966 5X XXX XXXX"
+                                       Keyboard="Telephone"
+                                       Text="{Binding PhoneNumber, Mode=TwoWay}"
+                                       FontSize="16"
+                                       BackgroundColor="Transparent"
+                                       HorizontalTextAlignment="End"
+                                       FlowDirection="LeftToRight"
+                                       TextColor="#181113"
+                                       PlaceholderColor="#8FA0B8" />
+                                <Label Grid.Column="1"
+                                       Text="☎"
+                                       FontSize="20"
+                                       VerticalTextAlignment="Center"
+                                       TextColor="#E56895" />
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="كلمة المرور"
+                               FontSize="14"
+                               TextColor="#181113"
+                               HorizontalTextAlignment="End" />
+                        <Border Stroke="#D4DEE9"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 14"
+                                BackgroundColor="#F8F9FB"
+                                Padding="8,8">
+                            <Grid ColumnDefinitions="Auto,*,Auto"
+                                  ColumnSpacing="8"
+                                  FlowDirection="LeftToRight">
+                                <Button Grid.Column="0"
+                                        Text="{Binding PasswordToggleIcon}"
+                                        Command="{Binding TogglePasswordVisibilityCommand}"
+                                        FontSize="18"
+                                        BackgroundColor="Transparent"
+                                        TextColor="#8FA0B8"
+                                        BorderWidth="0"
+                                        WidthRequest="34"
+                                        HeightRequest="34"
+                                        Padding="0" />
+                                <Entry Grid.Column="1"
+                                       Placeholder="••••••••"
+                                       IsPassword="{Binding IsPasswordHidden}"
+                                       Text="{Binding Password, Mode=TwoWay}"
+                                       FontSize="16"
+                                       BackgroundColor="Transparent"
+                                       HorizontalTextAlignment="End"
+                                       TextColor="#181113"
+                                       PlaceholderColor="#8FA0B8" />
+                                <Label Grid.Column="2"
+                                       Text="🔒"
+                                       FontSize="20"
+                                       VerticalTextAlignment="Center"
+                                       TextColor="#E56895" />
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                        <CheckBox IsChecked="{Binding IsTermsAccepted, Mode=TwoWay}"
+                                  Color="#E6195D"
+                                  VerticalOptions="Center" />
+                        <Label VerticalTextAlignment="Center" FontSize="14" HorizontalTextAlignment="End">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="أوافق على " TextColor="#181113" />
+                                    <Span Text="الشروط والأحكام" TextColor="#E6195D" FontAttributes="Bold" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </HorizontalStackLayout>
+
+                    <Button Text="{Binding RegisterButtonText}"
+                            Command="{Binding RegisterCommand}"
+                            BackgroundColor="#E6195D"
+                            TextColor="White"
+                            FontSize="20"
+                            FontAttributes="Bold"
+                            HeightRequest="64"
+                            CornerRadius="20"
+                            BorderWidth="0"
+                            Margin="0,4,0,0">
+                        <Button.Shadow>
+                            <Shadow Brush="#40E6195D" Offset="0,7" Radius="14" />
+                        </Button.Shadow>
+                    </Button>
+
+                    <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                       IsVisible="{Binding IsBusy}"
+                                       Color="#E6195D"
+                                       HorizontalOptions="Center" />
+
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="3" Margin="0,10,0,0">
+                        <Label Text="لديك حساب بالفعل؟"
+                               FontSize="14"
+                               TextColor="#617189" />
+                        <Button Text="سجل دخولك هنا"
+                                Command="{Binding BackToLoginCommand}"
+                                FontSize="14"
+                                FontAttributes="Bold"
+                                TextColor="#E6195D"
+                                BackgroundColor="Transparent"
+                                BorderWidth="0"
+                                Padding="0" />
+                    </HorizontalStackLayout>
+
+                    <Grid ColumnDefinitions="*,Auto,*" Margin="0,4,0,0">
+                        <BoxView Grid.Column="0"
+                                HeightRequest="1"
+                                Color="#D4DEE9"
+                                VerticalOptions="Center" />
+                        <Label Grid.Column="1"
+                               Text="أو سجل باستخدام"
+                               FontSize="14"
+                               TextColor="#8FA0B8"
+                               Margin="12,0" />
+                        <BoxView Grid.Column="2"
+                                HeightRequest="1"
+                                Color="#D4DEE9"
+                                VerticalOptions="Center" />
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" FlowDirection="LeftToRight">
+                        <Border Grid.Column="0"
+                                Stroke="#D4DEE9"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 14"
+                                BackgroundColor="#F8F9FB"
+                                Padding="10,12">
+                            <HorizontalStackLayout HorizontalOptions="Center" Spacing="8">
+                                <Label Text="Google" FontSize="18" FontAttributes="Bold" TextColor="#24364B" />
+                                <Label Text="🌈" FontSize="20" />
+                            </HorizontalStackLayout>
+                        </Border>
+
+                        <Border Grid.Column="1"
+                                Stroke="#D4DEE9"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 14"
+                                BackgroundColor="#F8F9FB"
+                                Padding="10,12">
+                            <HorizontalStackLayout HorizontalOptions="Center" Spacing="8">
+                                <Label Text="Apple" FontSize="18" FontAttributes="Bold" TextColor="#24364B" />
+                                <Label Text="◉" FontSize="20" TextColor="#24364B" />
+                            </HorizontalStackLayout>
+                        </Border>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </ScrollView>
+
+</ContentPage>

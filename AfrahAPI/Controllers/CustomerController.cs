@@ -1,4 +1,5 @@
 using AfrahAPI.Models.DTOs.Customer;
+using AfrahAPI.Models.DTOs.Auth;
 using AfrahAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,13 +13,60 @@ namespace AfrahAPI.Controllers;
 public class CustomerController : ControllerBase
 {
     private readonly ICustomerService _customerService;
+     private readonly IAuthService _authService;
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public CustomerController(ICustomerService customerService)
+    public CustomerController(ICustomerService customerService, IAuthService authService)
     {
         _customerService = customerService;
+        _authService = authService;
+    }
+
+    /// <summary>
+    /// تسجيل عميل جديد (إنشاء مستخدم + عميل)
+    /// </summary>
+    /// <param name="registerDto">بيانات التسجيل الكاملة</param>
+    /// <returns>نتيجة عملية التسجيل</returns>
+    [HttpPost("register")]
+    public async Task<ActionResult<RegisterResponseDTO>> Register([FromBody] CustomerCreateDTO registerDto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+
+
+       // var userResult = await _authService.RegisterAsync(userRegisterDto);
+
+   
+
+        // 2. إنشاء العميل وربطه بالمستخدم
+        var customerCreateDto = new CustomerCreateDTO
+        {
+            FirstName = registerDto.FirstName,
+            LastName = registerDto.LastName,
+            PhoneNumber = registerDto.PhoneNumber,
+            DateOfBirth = registerDto.DateOfBirth,
+            Address = registerDto.Address,
+            Gender = registerDto.Gender,
+            Country = registerDto.Country,
+            City = registerDto.City,
+            Nationality = registerDto.Nationality,
+            UserID =registerDto.UserID
+        };
+
+        try
+        {
+            var customer = await _customerService.CreateAsync(customerCreateDto);
+            return Ok(customer);
+        }
+        catch (Exception)
+        {
+            // في حالة فشل إنشاء العميل، يجب حذف المستخدم (rollback)
+            // TODO: إضافة آلية rollback
+            return StatusCode(500, new { message = "فشل إنشاء العميل بعد إنشاء المستخدم" });
+        }
     }
 
     /// <summary>
@@ -142,3 +190,4 @@ public class CustomerController : ControllerBase
         return Ok(customer);
     }
 }
+
