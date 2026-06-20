@@ -132,24 +132,31 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        await context.Database.MigrateAsync();
+
+        var seeder = services.GetRequiredService<AfrahAPI.DataAccess.Seeders.DbSeeder>();
+        await seeder.SeedAllAsync();
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "An error occurred while migrating or seeding the database.");
+        throw;
+    }
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference(); // إضافة واجهة Scalar لعرض OpenAPI
-    
-    // تشغيل Data Seeder في بيئة التطوير فقط
-    using (var scope = app.Services.CreateScope())
-    {
-        var seeder = scope.ServiceProvider.GetRequiredService<AfrahAPI.DataAccess.Seeders.DbSeeder>();
-        
-        // لتشغيل Seeding: قم بإزالة التعليق من السطر التالي
-        // await seeder.SeedAllAsync();
-        
-        // لحذف جميع البيانات ثم إعادة Seeding: قم بإزالة التعليق من السطور التالية
-        // await seeder.ClearAllDataAsync();
-        // await seeder.SeedAllAsync();
-    }
 }
 
 app.UseHttpsRedirection();
